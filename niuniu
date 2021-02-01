@@ -1,0 +1,143 @@
+import random
+import copy
+import time
+
+
+def xuanzhuang(wangjia):
+    return random.choices(wangjia)
+
+def fapai(wangjia,pai,puke0):
+    for i in range(5):
+        mid=[]
+        for j in wangjia:
+            puke1=puke0
+            
+            one=random.choices(puke1)
+            
+            mid.append(one[0])
+        
+        pai.append(mid)
+    return pai
+        
+
+def jisuan(wangjia,pai):
+    paimian=0
+    niu=[]
+    for j in pai:
+        niu.append(j[wangjia])
+    print("玩家{}的牌是：".format(wangjia),niu)
+    #time.sleep(3)
+    
+    fuben=copy.deepcopy(niu)
+    
+    for m,n in enumerate(niu):
+        if n>10:
+            niu[m]=10
+    for a,b in enumerate(niu[0:3]):
+            
+        for c,d in enumerate(niu[a+1:]):
+                
+            for e,f in enumerate(niu[a+c+1+1:]):
+                    
+                if (b+d+f)%10==0:
+                        
+                    niu[a]=0
+                    niu[c+a+1]=0
+                    niu[a+c+e+2]=0
+                    li=(niu[0]+niu[1]+niu[2]+niu[3]+niu[4])%10
+                    print('有牛!!!')
+                    #time.sleep(2)
+                    print("玩家{}的牌面是牛{}：".format(wangjia,li))
+                    paimian=1
+                    #time.sleep(1)
+                    return wangjia,1,li                        
+    if paimian==0:
+        fuben.sort()
+            
+        print("玩家{}无牛，{}最大".format(wangjia,fuben[4]))
+        #time.sleep(1)
+        return wangjia,0,fuben[4]
+def suanqian():
+    pass
+
+def lunzhuang(wangjia,jieguo):
+    pass
+
+def bei(x):
+    if x==0:
+        return 5
+    elif x>0 and x<=6:
+        return 1
+    elif x==7:
+        return 2
+    elif x==8:
+        return 3
+    elif x==9:
+        return 4
+    elif x>=10:
+        return 1
+
+def main():
+    x=input('请输入玩家数量(不得大于10):')
+    y=input('请输入游戏局数')
+    puke0=list(range(14))[1:]
+    puke=puke0*4
+    money=[0]*int(x)
+    wangjia=list(range(int(x)))
+    zhuang=xuanzhuang(wangjia)[0]
+    #time.sleep(2)
+    for ju in range(int(y)):
+        print("第{}局开始".format(ju+1))
+        print("庄家是：",zhuang)
+        pai=[]
+        jieguo=[]
+        print("开始发牌......")
+        #time.sleep(2)
+        pai=fapai(wangjia,pai,puke0)
+        #获取牌面
+        for i in wangjia:
+            mid1=jisuan(i,pai)
+            jieguo.append(mid1)
+            print("*"*30)
+            #time.sleep(2)
+        #算钱
+        print("开始算钱...",money)
+        
+        for i in jieguo:
+            if i[0]==zhuang:
+                pass
+            if i[1]>jieguo[zhuang][1]:
+                money[zhuang]=money[zhuang]-bei(i[2])
+                money[i[0]]=money[i[0]]+bei(i[2])
+            if i[1]==jieguo[zhuang][1]==0:
+                if i[2]>jieguo[zhuang][2]:
+                    money[i[0]]=money[i[0]]+1
+                    money[zhuang]=money[zhuang]-1
+                elif i[2]<=jieguo[zhuang][2]:
+                    money[i[0]]=money[i[0]]-1
+                    money[zhuang]=money[zhuang]+1
+            if i[1]<jieguo[zhuang][1] or i[1]==jieguo[zhuang][1]==1:
+                money[zhuang]=money[zhuang]+bei(jieguo[zhuang][2])
+                money[i[0]]=money[i[0]]-bei(jieguo[zhuang][2])
+        #time.sleep(2)
+        print('算钱完毕...',money)
+        #time.sleep(3)
+        #换庄
+        if jieguo[zhuang][1]==0:
+            if zhuang>=0 and zhuang <int(x)-1:
+
+                zhuang=zhuang+1
+                print("庄家是：",zhuang)
+            else:
+                zhuang=0
+                print("庄家是：",0)
+        #print("第{}局结果是：".format(ju+1),jieguo)
+        #time.sleep(10)
+        print('\n'*5)
+        #if ju<int(y)-1:
+            #Y=input("是否继续？")
+    
+    print("游戏结束")
+main() 
+
+
